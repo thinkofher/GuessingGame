@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.beniamin.guessinggame.MainActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_newgame"
+        android:title="New Game" />
+    <item
+        android:id="@+id/action_gamestats"
+        android:title="Game Stats" />
+    <item
+        android:id="@+id/action_about"
+        android:title="About" />
+</menu>
