@@ -1,7 +1,10 @@
 package com.beniamin.guessinggame;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -89,9 +92,14 @@ public class MainActivity extends AppCompatActivity {
         lblRange.setText(
                 "Enter a number between 1 and " + range +"."
         );
+
+        txtGuess.setText("" + range/2);
+        txtGuess.requestFocus();
+        txtGuess.selectAll();
     }
 
-    private void aboutMe(){
+    // AlertDialog with information about app author
+    private void aboutMe() {
         AlertDialog aboutDialog = new AlertDialog.Builder(MainActivity.this).create();
         aboutDialog.setTitle("About Guessing Game");
         aboutDialog.setMessage(
@@ -107,6 +115,37 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
         aboutDialog.show();
+    }
+
+    // Alert Dialog with select range menu
+    private void selectRange() {
+        final CharSequence[] items =  {"1 to 10", "1 to 100", "1 to 1000"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select the Range");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        switch(item) {
+                            case 0:
+                                range = 10;
+                                newGame();
+                                break;
+                            case 1:
+                                range = 100;
+                                newGame();
+                                break;
+                            case 2:
+                                range = 1000;
+                                newGame();
+                                break;
+                        }
+                        dialog.dismiss();
+                    }
+                }
+        );
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
@@ -181,6 +220,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.action_settings:
+                selectRange();
                 return true;
             case R.id.action_newgame:
                 newGame();
@@ -193,5 +233,13 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void storeRange(int newRange) {
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("range", newRange);
+        editor.apply();
     }
 }
