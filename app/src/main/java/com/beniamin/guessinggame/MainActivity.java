@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int theNumber;
     private int numberOfTries;
-    private int range = 100;
+    private int range;
     private boolean gameFinished;
 
     private EditText txtGuess;
@@ -129,14 +129,17 @@ public class MainActivity extends AppCompatActivity {
                         switch(item) {
                             case 0:
                                 range = 10;
+                                storeRange(range);
                                 newGame();
                                 break;
                             case 1:
                                 range = 100;
+                                storeRange(range);
                                 newGame();
                                 break;
                             case 2:
                                 range = 1000;
+                                storeRange(range);
                                 newGame();
                                 break;
                         }
@@ -170,6 +173,11 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        // Loading preferences
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        range = preferences.getInt("range", 100);
 
         // Starting new game after setting up app
         newGame();
