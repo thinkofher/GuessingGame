@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
                             " is correct. You win after " + numberOfTries
                             + " tries!";
 
+                    gameWon();
+
                     // pop-up message
                     Toast.makeText(MainActivity.this, message,
                             Toast.LENGTH_LONG).show();
@@ -96,6 +98,19 @@ public class MainActivity extends AppCompatActivity {
         txtGuess.setText("" + range/2);
         txtGuess.requestFocus();
         txtGuess.selectAll();
+    }
+
+    private void gameWon() {
+        SharedPreferences preferences=
+                PreferenceManager.getDefaultSharedPreferences(this);
+
+        // if there is no gamesWon preference in SharedPreferences
+        // just create it and set it to 1
+        int gamesWon = preferences.getInt("gamesWon", 0) + 1;
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("gamesWon", gamesWon);
+        editor.apply();
     }
 
     // AlertDialog with information about app author
@@ -149,6 +164,27 @@ public class MainActivity extends AppCompatActivity {
         );
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    // Alert Dialog with game stats
+    private void gameStats() {
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        int gamesWon = preferences.getInt("gamesWon", 0);
+        AlertDialog statDialog = new AlertDialog.Builder(MainActivity.this).create();
+        statDialog.setTitle("Guessing Game Stats");
+        statDialog.setMessage(
+                "You have won " + gamesWon + " games. Way to go!"
+        );
+        statDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }
+        );
+        statDialog.show();
     }
 
     @Override
@@ -234,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
                 newGame();
                 return true;
             case R.id.action_gamestats:
+                gameStats();
                 return true;
             case R.id.action_about:
                 aboutMe();
