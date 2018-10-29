@@ -3,7 +3,6 @@ package com.beniamin.guessinggame;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,12 +21,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DecimalFormat;
-
 public class MainActivity extends AppCompatActivity {
-
-    // TODO: add ratio of wins to losses
-
+    
     private int theNumber;
     private int numberOfTries;
     private int range;
@@ -89,8 +84,11 @@ public class MainActivity extends AppCompatActivity {
                 txtGuess.selectAll();
                 updateRange();
             }
+        } else {
+            String tryAgain = "Start new game to try again!";
+            Toast.makeText(MainActivity.this, tryAgain,
+                    Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void newGame() {
@@ -240,10 +238,12 @@ public class MainActivity extends AppCompatActivity {
 
         double winToLoose = (double) gamesWon/ (double) gamesLoose;
 
+
+        String ratioString = String.format("Your Win/Lose ratio is %.2f", winToLoose);
         statDialog.setMessage(
                 "You have won " + gamesWon + " and have loose " + gamesLoose +
                         " games. Way to go!\n\n" +
-                        String.format("Your Win/Lose ratio is %.2f", winToLoose)
+                        ratioString
         );
         statDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
