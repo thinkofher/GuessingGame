@@ -90,8 +90,8 @@
 
         <TextView
             android:id="@+id/lblOutput"
-            android:layout_width="match_parent"
-            android:layout_height="26dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
@@ -99,6 +99,15 @@
             android:text="Enter a number, then click Guess!"
             android:textAlignment="center"
             android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/lblChances"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:text="You can loose!"
+            android:textAlignment="center" />
 
         <Button
             android:id="@+id/btnPlayAgain"

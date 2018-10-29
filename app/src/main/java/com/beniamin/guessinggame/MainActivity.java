@@ -23,10 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    
+    // TODO: add ratio of wins to losses
 
     private int theNumber;
     private int numberOfTries;
     private int range;
+    private int chances;
     private boolean gameFinished;
 
     private EditText txtGuess;
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Button playAgainButton;
     private TextView lblOutput;
     private TextView lblRange;
+    private TextView lblChances;
 
     public void checkGuess() {
 
@@ -49,10 +53,12 @@ public class MainActivity extends AppCompatActivity {
 
                 if (guess < theNumber) {
                     numberOfTries++;
+                    chances--;
                     message = guess + " is too low. Try again.";
                 }
                 else if (guess > theNumber) {
                     numberOfTries++;
+                    chances--;
                     message = guess + " is too high. Try again.";
                 }
                 else {
@@ -61,14 +67,16 @@ public class MainActivity extends AppCompatActivity {
                             " is correct. You win after " + numberOfTries
                             + " tries!";
 
-                    gameWon();
+                    gameWon(message);
+                }
 
-                    // pop-up message
-                    Toast.makeText(MainActivity.this, message,
-                            Toast.LENGTH_LONG).show();
-                    gameFinished = true;
-                    playAgainButton.setVisibility(View.VISIBLE);
-
+                // loosing game
+                if (chances <= 0 && !gameFinished) {
+                    message = "You loose. The number was " + theNumber;
+                    String messagePop = guess +
+                            " is not correct. You loose. The number was " +
+                            theNumber;
+                    gameLoose(messagePop);
                 }
             } catch (Exception e) {
                 message = "Enter a whole number between 1 and "
@@ -77,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 lblOutput.setText(message);
                 txtGuess.requestFocus();
                 txtGuess.selectAll();
+                updateRange();
             }
         }
 
@@ -89,10 +98,26 @@ public class MainActivity extends AppCompatActivity {
         numberOfTries = 0;
         gameFinished = false;
 
+        // setting chances
+        switch (range) {
+            case 10:
+                chances = 15;
+                break;
+            case 100:
+                chances = 20;
+                break;
+            case 1000:
+                chances = 25;
+                break;
+        }
+
         playAgainButton.setVisibility(View.INVISIBLE);
         lblOutput.setText(startMessage);
         lblRange.setText(
                 "Enter a number between 1 and " + range +"."
+        );
+        lblChances.setText(
+                "You have " + chances + " chances left."
         );
 
         txtGuess.setText("" + range/2);
@@ -100,7 +125,41 @@ public class MainActivity extends AppCompatActivity {
         txtGuess.selectAll();
     }
 
-    private void gameWon() {
+    private  void updateRange(){
+        String message = "You have " + chances + " chances left.";
+        lblChances.setText(
+                message
+        );
+    }
+
+    private  void gameLoose(String message) {
+
+        // pop-up message
+        Toast.makeText(MainActivity.this, message,
+                Toast.LENGTH_LONG).show();
+        gameFinished = true;
+        playAgainButton.setVisibility(View.VISIBLE);
+
+        SharedPreferences preferences=
+                PreferenceManager.getDefaultSharedPreferences(this);
+
+        // if there is no gamesWon preference in SharedPreferences
+        // just create it and set it to 1
+        int gamesLoose = preferences.getInt("gamesLoose", 0) + 1;
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("gamesLoose", gamesLoose);
+        editor.apply();
+    }
+
+    private void gameWon(String message) {
+
+        // pop-up message
+        Toast.makeText(MainActivity.this, message,
+                Toast.LENGTH_LONG).show();
+        gameFinished = true;
+        playAgainButton.setVisibility(View.VISIBLE);
+
         SharedPreferences preferences=
                 PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -197,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
         playAgainButton = (Button) findViewById(R.id.btnPlayAgain);
         lblOutput = (TextView) findViewById(R.id.lblOutput);
         lblRange = (TextView) findViewById(R.id.lblRange);
+        lblChances = (TextView) findViewById(R.id.lblChances);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
