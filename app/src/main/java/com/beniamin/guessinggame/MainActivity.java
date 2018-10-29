@@ -22,8 +22,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 public class MainActivity extends AppCompatActivity {
-    
+
     // TODO: add ratio of wins to losses
 
     private int theNumber;
@@ -229,11 +231,19 @@ public class MainActivity extends AppCompatActivity {
     private void gameStats() {
         SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
+
         int gamesWon = preferences.getInt("gamesWon", 0);
+        int gamesLoose = preferences.getInt("gamesLoose", 0);
+
         AlertDialog statDialog = new AlertDialog.Builder(MainActivity.this).create();
         statDialog.setTitle("Guessing Game Stats");
+
+        double winToLoose = (double) gamesWon/ (double) gamesLoose;
+
         statDialog.setMessage(
-                "You have won " + gamesWon + " games. Way to go!"
+                "You have won " + gamesWon + " and have loose " + gamesLoose +
+                        " games. Way to go!\n\n" +
+                        String.format("Your Win/Lose ratio is %.2f", winToLoose)
         );
         statDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
